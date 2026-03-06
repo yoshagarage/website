@@ -1,25 +1,25 @@
 /* ===== STYLE B: HARD OFF / RETAIL ===== */
-body.style-a {
+body.style-b {
   background: #f5f0e0;
   color: #333;
   font-family: "MS Gothic", "ＭＳ ゴシック", "Hiragino Kaku Gothic Pro", Osaka, monospace;
 }
 
-.style-a .site-header {
+.style-b .site-header {
   background: #cc0000;
   padding: 16px 20px;
   border-bottom: 6px solid #ffcc00;
 }
-.style-a .site-header .logo {
+.style-b .site-header .logo {
   /* filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.2)); */
 }
-.style-a .site-header .subtitle {
+.style-b .site-header .subtitle {
   font-size: 12px;
   color: #ffee88;
   margin-top: 2px;
 }
 
-.style-a .marquee-wrap {
+.style-b .marquee-wrap {
   background: #ffcc00;
   color: #cc0000;
   padding: 6px 0;
@@ -28,15 +28,15 @@ body.style-a {
   border-bottom: 3px solid #cc0000;
 }
 
-.style-a .products { padding: 24px 16px; gap: 16px; }
-.style-a .product {
+.style-b .products { padding: 24px 16px; gap: 16px; }
+.style-b .product {
   background: #fff;
   border: 3px solid #333;
   padding: 16px;
   width: 280px;
   box-shadow: 5px 5px 0 #333;
 }
-.style-a .product .product-img {
+.style-b .product .product-img {
   width: 248px;
   height: 180px;
   margin: 0 auto 12px;
@@ -49,20 +49,20 @@ body.style-a {
   );
   border: 2px solid #999;
 }
-.style-a .product h3 {
+.style-b .product h3 {
   font-size: 14px;
   background: #cc0000;
   color: #fff;
   padding: 4px 8px;
   display: inline-block;
 }
-.style-a .product .price {
+.style-b .product .price {
   color: #cc0000;
   font-size: 22px;
   margin: 10px 0;
 }
-.style-a .product .price::before { content: "特価 "; font-size: 12px; }
-.style-a .product .buy-btn {
+.style-b .product .price::before { content: "特価 "; font-size: 12px; }
+.style-b .product .buy-btn {
   background: #ffcc00;
   color: #333;
   padding: 8px 28px;
@@ -71,13 +71,13 @@ body.style-a {
   border: 3px solid #333;
   box-shadow: 2px 2px 0 #333;
 }
-.style-a .product .buy-btn:hover {
+.style-b .product .buy-btn:hover {
   background: #ffe033;
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 #333;
 }
 
-.style-a .site-footer {
+.style-b .site-footer {
   background: #cc0000;
   color: #ffcc00;
   padding: 14px;
@@ -85,17 +85,17 @@ body.style-a {
   border-top: 6px solid #ffcc00;
 }
 
-.style-a .toolbar { background: #e8e0c8; border-bottom: 3px solid #cc0000; }
-.style-a .filter-btn { border-color: #333; color: #333; font-weight: bold; }
-.style-a .filter-btn.active,
-.style-a .filter-btn:hover { background: #cc0000; color: #fff; border-color: #333; }
-.style-a .sort-select { border-color: #333; color: #333; background: #fff; font-weight: bold; }
-.style-a .tag { border: 1px solid #999; font-weight: bold; }
-.style-a .tag-category { background: #ffcc00; color: #333; }
-.style-a .tag-brand { background: #333; color: #fff; }
+.style-b .toolbar { background: #e8e0c8; border-bottom: 3px solid #cc0000; }
+.style-b .filter-btn { border-color: #333; color: #333; font-weight: bold; }
+.style-b .filter-btn.active,
+.style-b .filter-btn:hover { background: #cc0000; color: #fff; border-color: #333; }
+.style-b .sort-select { border-color: #333; color: #333; background: #fff; font-weight: bold; }
+.style-b .tag { border: 1px solid #999; font-weight: bold; }
+.style-b .tag-category { background: #ffcc00; color: #333; }
+.style-b .tag-brand { background: #333; color: #fff; }
 
-.style-a .no-results { color: #cc0000; font-weight: bold; }
+.style-b .no-results { color: #cc0000; font-weight: bold; }
 
-.style-a .visitor-counter { background: #333; color: #0f0; }
-.style-a .construction { color: #cc0000; font-weight: bold; }
-.style-a hr { border: none; border-top: 4px solid #cc0000; margin: 0; }
+.style-b .visitor-counter { background: #333; color: #0f0; }
+.style-b .construction { color: #cc0000; font-weight: bold; }
+.style-b hr { border: none; border-top: 4px solid #cc0000; margin: 0; }

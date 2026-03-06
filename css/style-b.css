@@ -1,25 +1,25 @@
 /* ===== STYLE B: BLUE RETAIL ===== */
-body.style-b {
+body.style-a {
   background: #e8f2f8;
   color: #215765;
   font-family: "MS Gothic", "ＭＳ ゴシック", "Hiragino Kaku Gothic Pro", Osaka, monospace;
 }
 
-.style-b .site-header {
+.style-a .site-header {
   background: #54A9DE;
   padding: 16px 20px;
   border-bottom: 6px solid #FFCC11;
 }
-.style-b .site-header .logo {
+.style-a .site-header .logo {
   filter: drop-shadow(3px 3px 0 rgba(33,87,101,0.5));
 }
-.style-b .site-header .subtitle {
+.style-a .site-header .subtitle {
   font-size: 12px;
   color: #fff;
   margin-top: 2px;
 }
 
-.style-b .marquee-wrap {
+.style-a .marquee-wrap {
   background: #FFCC11;
   color: #215765;
   padding: 6px 0;
@@ -28,15 +28,15 @@ body.style-b {
   border-bottom: 3px solid #54A9DE;
 }
 
-.style-b .products { padding: 24px 16px; gap: 16px; }
-.style-b .product {
+.style-a .products { padding: 24px 16px; gap: 16px; }
+.style-a .product {
   background: #fff;
   border: 3px solid #215765;
   padding: 16px;
   width: 280px;
   box-shadow: 5px 5px 0 #215765;
 }
-.style-b .product .product-img {
+.style-a .product .product-img {
   width: 248px;
   height: 180px;
   margin: 0 auto 12px;
@@ -49,20 +49,20 @@ body.style-b {
   );
   border: 2px solid #3496AC;
 }
-.style-b .product h3 {
+.style-a .product h3 {
   font-size: 14px;
   background: #54A9DE;
   color: #fff;
   padding: 4px 8px;
   display: inline-block;
 }
-.style-b .product .price {
+.style-a .product .price {
   color: #54A9DE;
   font-size: 22px;
   margin: 10px 0;
 }
-.style-b .product .price::before { content: "特価 "; font-size: 12px; }
-.style-b .product .buy-btn {
+.style-a .product .price::before { content: "特価 "; font-size: 12px; }
+.style-a .product .buy-btn {
   background: #FFCC11;
   color: #215765;
   padding: 8px 28px;
@@ -71,13 +71,13 @@ body.style-b {
   border: 3px solid #215765;
   box-shadow: 2px 2px 0 #215765;
 }
-.style-b .product .buy-btn:hover {
+.style-a .product .buy-btn:hover {
   background: #ffe044;
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 #215765;
 }
 
-.style-b .site-footer {
+.style-a .site-footer {
   background: #54A9DE;
   color: #fff;
   padding: 14px;
@@ -85,17 +85,17 @@ body.style-b {
   border-top: 6px solid #FFCC11;
 }
 
-.style-b .toolbar { background: #d4e8f2; border-bottom: 3px solid #54A9DE; }
-.style-b .filter-btn { border-color: #215765; color: #215765; font-weight: bold; }
-.style-b .filter-btn.active,
-.style-b .filter-btn:hover { background: #54A9DE; color: #fff; border-color: #215765; }
-.style-b .sort-select { border-color: #215765; color: #215765; background: #fff; font-weight: bold; }
-.style-b .tag { border: 1px solid #3496AC; font-weight: bold; }
-.style-b .tag-category { background: #FFCC11; color: #215765; }
-.style-b .tag-brand { background: #215765; color: #fff; }
+.style-a .toolbar { background: #d4e8f2; border-bottom: 3px solid #54A9DE; }
+.style-a .filter-btn { border-color: #215765; color: #215765; font-weight: bold; }
+.style-a .filter-btn.active,
+.style-a .filter-btn:hover { background: #54A9DE; color: #fff; border-color: #215765; }
+.style-a .sort-select { border-color: #215765; color: #215765; background: #fff; font-weight: bold; }
+.style-a .tag { border: 1px solid #3496AC; font-weight: bold; }
+.style-a .tag-category { background: #FFCC11; color: #215765; }
+.style-a .tag-brand { background: #215765; color: #fff; }
 
-.style-b .no-results { color: #54A9DE; font-weight: bold; }
+.style-a .no-results { color: #54A9DE; font-weight: bold; }
 
-.style-b .visitor-counter { background: #215765; color: #83CA99; }
-.style-b .construction { color: #54A9DE; font-weight: bold; }
-.style-b hr { border: none; border-top: 4px solid #54A9DE; margin: 0; }
+.style-a .visitor-counter { background: #215765; color: #83CA99; }
+.style-a .construction { color: #54A9DE; font-weight: bold; }
+.style-a hr { border: none; border-top: 4px solid #54A9DE; margin: 0; }
