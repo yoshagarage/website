@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yōsha Garage ★ 西洋車ガレージ</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/style-a.css">
+  <link rel="stylesheet" href="css/style-b.css">
+</head>
+<body class="style-a">
+
+  <div class="style-switcher">
+    <button data-style="a" onclick="setStyle('a')" class="active">A 店舗</button>
+    <button data-style="b" onclick="setStyle('b')">B 青</button>
+  </div>
+
+  <header class="site-header">
+    <img src="assets/images/logo.png" alt="Yōsha Garage 西洋車ガレージ" class="logo">
+    <div class="subtitle">★ AUTOMOTIVE ACCESSORIES ★</div>
+  </header>
+
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      ★★★ Welcome to Yōsha Garage ★ RAV4 ゲージホルダー入荷！★ Cobb Accessport マウント ★ シフトノブ ★ PayPal決済対応 ★ 送料についてはお問い合わせください ★★★
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="construction">
+    ◆ ～ UNDER CONSTRUCTION ～ ◆ 工事中 ◆
+  </div>
+
+  <hr>
+
+  <div class="toolbar">
+    <div class="filter-group">
+      <span class="filter-label">カテゴリ:</span>
+      <button class="filter-btn active" data-filter="category" data-value="all">ALL</button>
+      <button class="filter-btn" data-filter="category" data-value="interior">Interior</button>
+      <button class="filter-btn" data-filter="category" data-value="exterior">Exterior</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">車種:</span>
+      <button class="filter-btn active" data-filter="brand" data-value="all">ALL</button>
+      <button class="filter-btn" data-filter="brand" data-value="toyota">Toyota</button>
+      <button class="filter-btn" data-filter="brand" data-value="subaru">Subaru</button>
+      <button class="filter-btn" data-filter="brand" data-value="generic">Generic</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">並べ替え:</span>
+      <select class="sort-select" id="sortSelect">
+        <option value="added-desc">Date Added ↓</option>
+        <option value="added-asc">Date Added ↑</option>
+        <option value="price-asc">Price ↑</option>
+        <option value="price-desc">Price ↓</option>
+      </select>
+    </div>
+  </div>
+
+  <section class="products" id="productGrid">
+    <div class="no-results" id="noResults" style="display:none;">該当する商品がありません ★ No products match your filters</div>
+
+    <div class="product" data-category="interior" data-brand="toyota" data-price="89" data-added="2026-03-01">
+      <div class="product-tags">
+        <span class="tag tag-category">Interior</span>
+        <span class="tag tag-brand">Toyota</span>
+      </div>
+      <div class="product-img"><span>📐</span></div>
+      <h3>RAV4 Gauge Holder</h3>
+      <p class="price">$89.00 AUD</p>
+      <p class="jp-label">RAV4 ゲージホルダー</p>
+      <a href="https://www.paypal.com/au/business/accept-payments/payment-links" class="buy-btn" target="_blank">購入 BUY</a>
+    </div>
+
+    <div class="product" data-category="interior" data-brand="subaru" data-price="65" data-added="2026-03-03">
+      <div class="product-tags">
+        <span class="tag tag-category">Interior</span>
+        <span class="tag tag-brand">Subaru</span>
+      </div>
+      <div class="product-img"><span>🔧</span></div>
+      <h3>Cobb Accessport Mount</h3>
+      <p class="price">$65.00 AUD</p>
+      <p class="jp-label">Cobb マウント</p>
+      <a href="https://www.paypal.com/au/business/accept-payments/payment-links" class="buy-btn" target="_blank">購入 BUY</a>
+    </div>
+
+    <div class="product" data-category="interior" data-brand="generic" data-price="120" data-added="2026-03-06">
+      <div class="product-tags">
+        <span class="tag tag-category">Interior</span>
+        <span class="tag tag-brand">Generic</span>
+      </div>
+      <div class="product-img"><span>🏁</span></div>
+      <h3>Shift Knob</h3>
+      <p class="price">$120.00 AUD</p>
+      <p class="jp-label">シフトノブ</p>
+      <a href="https://www.paypal.com/au/business/accept-payments/payment-links" class="buy-btn" target="_blank">購入 BUY</a>
+    </div>
+
+  </section>
+
+  <hr>
+
+  <footer class="site-footer">
+    <div>© 2026 Yōsha Garage ★ All Rights Reserved</div>
+    <div class="visitor-counter">VISITORS: <span id="vc">004,829</span></div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
