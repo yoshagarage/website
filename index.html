@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#54A9DE">
   <title>Yōsha Garage ★ 西洋車ガレージ</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/style-a.css">
   <link rel="stylesheet" href="css/style-b.css">
@@ -32,20 +38,22 @@
 
   <div class="toolbar">
     <div class="filter-group">
-      <span class="filter-label">カテゴリ:</span>
+      <span class="filter-label">Category:</span>
       <div class="filter-options" id="categoryFilters"></div>
     </div>
     <div class="filter-group">
-      <span class="filter-label">車種:</span>
+      <span class="filter-label">Vehicle:</span>
       <div class="filter-options" id="brandFilters"></div>
     </div>
     <div class="filter-group">
-      <span class="filter-label">並べ替え:</span>
+      <span class="filter-label">Sort:</span>
       <select class="sort-select" id="sortSelect">
-        <option value="added-desc">Date Added ↓</option>
-        <option value="added-asc">Date Added ↑</option>
-        <option value="price-asc">Price ↑</option>
-        <option value="price-desc">Price ↓</option>
+        <option value="added-desc">Date, new to old</option>
+        <option value="added-asc">Date, old to new</option>
+        <option value="price-asc">Price, low to high</option>
+        <option value="price-desc">Price, high to low</option>
+        <option value="name-asc">Name, A to Z</option>
+        <option value="name-desc">Name, Z to A</option>
       </select>
     </div>
   </div>
@@ -62,6 +70,7 @@
   </footer>
 
   <script src="js/products-data.js"></script>
+  <script src="js/product-images.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
