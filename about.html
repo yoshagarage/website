@@ -5,23 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#54A9DE">
-  <title>Yōsha Garage ★ 西洋車ガレージ</title>
+  <title>About ★ Yōsha Garage</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="preconnect" href="https://www.paypal.com" crossorigin>
-  <link rel="preconnect" href="https://www.paypalobjects.com" crossorigin>
   <link rel="stylesheet" href="css/base.css">
 </head>
 <body>
-
   <header class="site-header">
     <div class="site-header-inner">
       <div class="site-header-nav site-header-nav-desktop">
         <nav class="site-nav site-nav-header" aria-label="Primary navigation">
-          <a class="site-nav-link is-current" href="index.html" aria-current="page">
+          <a class="site-nav-link" href="index.html">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 8h12l-1 12H7L6 8Z"></path>
@@ -30,7 +27,7 @@
             </span>
             <span class="site-nav-label">STORE</span>
           </a>
-          <a class="site-nav-link" href="about.html">
+          <a class="site-nav-link is-current" href="about.html" aria-current="page">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="9"></circle>
@@ -52,7 +49,7 @@
           <span class="header-menu-toggle-label">MENU</span>
         </summary>
         <nav class="site-nav site-nav-header site-nav-mobile" aria-label="Primary navigation">
-          <a class="site-nav-link is-current" href="index.html" aria-current="page">
+          <a class="site-nav-link" href="index.html">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 8h12l-1 12H7L6 8Z"></path>
@@ -61,7 +58,7 @@
             </span>
             <span class="site-nav-label">STORE</span>
           </a>
-          <a class="site-nav-link" href="about.html">
+          <a class="site-nav-link is-current" href="about.html" aria-current="page">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="9"></circle>
@@ -88,31 +85,13 @@
 
   <hr>
 
-  <div class="toolbar">
-    <div class="filter-group">
-      <span class="filter-label">Category:</span>
-      <div class="filter-options" id="categoryFilters"></div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Vehicle:</span>
-      <div class="filter-options" id="brandFilters"></div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Sort:</span>
-      <select class="sort-select" id="sortSelect">
-        <option value="added-desc">Date, new to old</option>
-        <option value="added-asc">Date, old to new</option>
-        <option value="price-asc">Price, low to high</option>
-        <option value="price-desc">Price, high to low</option>
-        <option value="name-asc">Name, A to Z</option>
-        <option value="name-desc">Name, Z to A</option>
-      </select>
-    </div>
-  </div>
-
-  <section class="products" id="productGrid">
-    <div class="no-results" id="noResults" style="display:none;">該当する商品がありません ★ No products match your filters</div>
-  </section>
+  <main class="page-content">
+    <section class="about-panel">
+      <p>Based in Melbourne, Australia, <strong>Yōsha Garage</strong> designs and produces automotive accessories with a key focus on practical design.</p>
+      <p>Follow along on <a href="https://www.instagram.com/yoshagarage" target="_blank" rel="noopener noreferrer">Instagram</a> for updates and new projects.</p>
+      <p>For customisations or other enquiries, please reach out through instagram DMs.</p>
+    </section>
+  </main>
 
   <hr>
 
@@ -122,7 +101,6 @@
   </footer>
 
   <script src="js/products-data.js"></script>
-  <script src="js/product-images.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,34 +1,3 @@
-/* ===== THEME SYSTEM ===== */
-var enabledStyles = ['a'];
-var defaultStyle = 'a';
-
-function isStyleEnabled(id) {
-  return enabledStyles.indexOf(id) !== -1;
-}
-
-function applyStyle(id) {
-  var classNames = ['style-' + id];
-  if (document.body.classList.contains('modal-open')) {
-    classNames.push('modal-open');
-  }
-
-  document.body.className = classNames.join(' ');
-  document.querySelectorAll('[data-style]').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.style === id);
-  });
-}
-
-function setStyle(id) {
-  var styleId = isStyleEnabled(id) ? id : defaultStyle;
-  applyStyle(styleId);
-  localStorage.setItem('yosha-style', styleId);
-}
-
-(function() {
-  var saved = localStorage.getItem('yosha-style');
-  setStyle(isStyleEnabled(saved) ? saved : defaultStyle);
-})();
-
 /* ===== FILTER, SORT & MODAL STATE ===== */
 var activeFilters = { category: 'all', brand: 'all' };
 var productGrid = document.getElementById('productGrid');
@@ -37,6 +6,7 @@ var sortSelect = document.getElementById('sortSelect');
 var activeProductModal = null;
 var activeModalKeyHandler = null;
 var activeModalTrigger = null;
+var catalogProducts = [];
 
 function formatLabel(value) {
   return String(value)
@@ -50,6 +20,163 @@ function formatLabel(value) {
 
 function formatPrice(value) {
   return '$' + Number(value).toFixed(2) + ' AUD';
+}
+
+function getProductCheckoutConfig(product) {
+  return product && product.checkout && typeof product.checkout === 'object'
+    ? product.checkout
+    : null;
+}
+
+function isPayPalPaymentLinkCheckout(checkout) {
+  return !!(checkout &&
+    checkout.provider === 'paypal' &&
+    checkout.type === 'payment-link' &&
+    String(checkout.paymentId || '').trim()
+  );
+}
+
+function getProductCtaMode(product) {
+  var ctaConfig = product && product.cta && typeof product.cta === 'object'
+    ? product.cta
+    : {};
+
+  if (ctaConfig.mode) {
+    return ctaConfig.mode;
+  }
+
+  if (isPayPalPaymentLinkCheckout(getProductCheckoutConfig(product))) {
+    return 'modal';
+  }
+
+  if (String(product.buyUrl || product.butUrl || '').trim()) {
+    return 'link';
+  }
+
+  return 'disabled';
+}
+
+function getProductCtaLabel(product, mode) {
+  var ctaConfig = product && product.cta && typeof product.cta === 'object'
+    ? product.cta
+    : {};
+  var label = String(ctaConfig.label || '').trim();
+
+  if (label) {
+    return label;
+  }
+
+  return mode === 'disabled' ? 'COMING SOON' : 'BUY';
+}
+
+function isProductInteractive(product) {
+  return getProductCtaMode(product) !== 'disabled';
+}
+
+function buildPayPalPaymentUrl(checkout) {
+  return 'https://www.paypal.com/ncp/payment/' + encodeURIComponent(checkout.paymentId);
+}
+
+var PAYPAL_OBJECTS_ORIGIN = 'https://www.paypalobjects.com';
+var PAYPAL_ORIGIN = 'https://www.paypal.com';
+var PAYPAL_PAYMENT_CARDS_SRC = PAYPAL_OBJECTS_ORIGIN + '/images/Debit_Credit_APM.svg';
+var PAYPAL_WORDMARK_SRC = PAYPAL_OBJECTS_ORIGIN + '/paypal-ui/logos/svg/paypal-wordmark-color.svg';
+var preloadedCheckoutAssets = {};
+
+function ensurePreconnectLink(origin) {
+  var selector = 'link[rel="preconnect"][href="' + origin + '"]';
+
+  if (document.head.querySelector(selector)) {
+    return;
+  }
+
+  var link = document.createElement('link');
+  link.rel = 'preconnect';
+  link.href = origin;
+  link.crossOrigin = 'anonymous';
+  document.head.appendChild(link);
+}
+
+function preloadCheckoutAsset(src) {
+  if (!src || preloadedCheckoutAssets[src]) {
+    return;
+  }
+
+  var image = new Image();
+  image.decoding = 'async';
+  image.src = src;
+  preloadedCheckoutAssets[src] = image;
+}
+
+function warmCheckoutAssets(products) {
+  var hasPayPalCheckout = Array.isArray(products) && products.some(function(product) {
+    return isPayPalPaymentLinkCheckout(getProductCheckoutConfig(product));
+  });
+
+  if (!hasPayPalCheckout || !document.head) {
+    return;
+  }
+
+  ensurePreconnectLink(PAYPAL_OBJECTS_ORIGIN);
+  ensurePreconnectLink(PAYPAL_ORIGIN);
+  preloadCheckoutAsset(PAYPAL_PAYMENT_CARDS_SRC);
+  preloadCheckoutAsset(PAYPAL_WORDMARK_SRC);
+}
+
+function buildProductModalHash(productId) {
+  return '#product=' + encodeURIComponent(productId);
+}
+
+function getProductIdFromHash() {
+  var hash = String(window.location.hash || '');
+
+  if (hash.indexOf('#product=') !== 0) {
+    return '';
+  }
+
+  try {
+    return decodeURIComponent(hash.slice('#product='.length));
+  } catch (error) {
+    return '';
+  }
+}
+
+function replaceUrlHash(hash) {
+  window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
+}
+
+function syncProductModalHash(productId) {
+  var nextHash = productId ? buildProductModalHash(productId) : '';
+
+  if (window.location.hash === nextHash) {
+    return;
+  }
+
+  replaceUrlHash(nextHash);
+}
+
+function getCatalogProductById(productId) {
+  var index;
+
+  if (!productId) {
+    return null;
+  }
+
+  for (index = 0; index < catalogProducts.length; index += 1) {
+    if (catalogProducts[index].id === productId) {
+      return catalogProducts[index];
+    }
+  }
+
+  return null;
+}
+
+function getProductCardById(productId) {
+  if (!productId) {
+    return null;
+  }
+
+  return document.querySelector('.product[data-product-id="' + productId + '"]');
 }
 
 function getProductImages(product) {
@@ -122,28 +249,40 @@ function createProductTags(product, extraClassName) {
   return tags;
 }
 
-function createProductCta(product, extraClassName) {
+function createProductCta(product, extraClassName, options) {
   var buyUrl = String(product.buyUrl || product.butUrl || '').trim();
+  var settings = options || {};
+  var ctaMode = getProductCtaMode(product);
+  var ctaLabel = getProductCtaLabel(product, ctaMode);
   var cta;
-  var isDisabled = !buyUrl;
+  var isDisabled = ctaMode === 'disabled';
 
-  if (buyUrl) {
+  if (ctaMode === 'modal' && settings.context === 'modal') {
+    return null;
+  }
+
+  if (ctaMode === 'link' && buyUrl) {
     cta = document.createElement('a');
     cta.href = buyUrl;
     cta.target = '_blank';
     cta.rel = 'noopener noreferrer';
-    cta.textContent = '購入 BUY';
+    cta.textContent = ctaLabel;
   } else {
     cta = document.createElement('button');
     cta.type = 'button';
-    cta.textContent = 'COMING SOON';
-    cta.setAttribute('aria-disabled', 'true');
+    cta.textContent = ctaLabel;
+    if (isDisabled) {
+      cta.setAttribute('aria-disabled', 'true');
+    }
   }
 
   cta.className = 'buy-btn' + (isDisabled ? ' buy-btn-disabled' : '') + (extraClassName ? ' ' + extraClassName : '');
   cta.addEventListener('click', function(event) {
     if (isDisabled) {
       event.preventDefault();
+    } else if (ctaMode === 'modal') {
+      event.preventDefault();
+      openProductModal(product, settings.triggerElement || null);
     }
     event.stopPropagation();
   });
@@ -253,7 +392,9 @@ function createCompatibilityList(product) {
   return section;
 }
 
-function closeProductModal() {
+function closeProductModal(options) {
+  var settings = options || {};
+
   if (!activeProductModal) return;
 
   if (activeModalKeyHandler) {
@@ -265,7 +406,11 @@ function closeProductModal() {
   activeModalKeyHandler = null;
   document.body.classList.remove('modal-open');
 
-  if (activeModalTrigger && typeof activeModalTrigger.focus === 'function') {
+  if (settings.updateHash !== false) {
+    syncProductModalHash('');
+  }
+
+  if (settings.restoreFocus !== false && activeModalTrigger && typeof activeModalTrigger.focus === 'function') {
     activeModalTrigger.focus();
   }
   activeModalTrigger = null;
@@ -297,12 +442,71 @@ function createThumbnailButton(mainImage, thumbnails, imageSrc, imageAlt, isActi
   return button;
 }
 
-function openProductModal(product, triggerElement) {
-  closeProductModal();
+function createModalCheckoutMount(product) {
+  var checkout = getProductCheckoutConfig(product);
+  var mount;
+  var form;
+  var submitButton;
+  var cardsImage;
+  var branding;
+  var brandingText;
+  var brandingLogo;
+
+  if (!isPayPalPaymentLinkCheckout(checkout)) {
+    return null;
+  }
+
+  mount = document.createElement('div');
+  mount.className = 'modal-checkout modal-paypal-checkout';
+
+  form = document.createElement('form');
+  form.className = 'paypal-payment-form';
+  form.action = buildPayPalPaymentUrl(checkout);
+  form.method = 'post';
+  form.target = '_blank';
+  form.rel = 'noopener noreferrer';
+
+  submitButton = document.createElement('input');
+  submitButton.className = 'paypal-payment-button';
+  submitButton.type = 'submit';
+  submitButton.value = String(checkout.submitLabel || 'Buy Now').trim() || 'Buy Now';
+
+  cardsImage = document.createElement('img');
+  cardsImage.className = 'paypal-payment-cards';
+  cardsImage.src = PAYPAL_PAYMENT_CARDS_SRC;
+  cardsImage.alt = 'PayPal accepted payment methods';
+
+  branding = document.createElement('section');
+  branding.className = 'paypal-payment-branding';
+
+  brandingText = document.createElement('span');
+  brandingText.textContent = 'Powered by ';
+
+  brandingLogo = document.createElement('img');
+  brandingLogo.className = 'paypal-payment-logo';
+  brandingLogo.src = PAYPAL_WORDMARK_SRC;
+  brandingLogo.alt = 'PayPal';
+
+  branding.appendChild(brandingText);
+  branding.appendChild(brandingLogo);
+
+  form.appendChild(submitButton);
+  form.appendChild(cardsImage);
+  form.appendChild(branding);
+  mount.appendChild(form);
+
+  return mount;
+}
+
+function openProductModal(product, triggerElement, options) {
+  var settings = options || {};
+
+  closeProductModal({ updateHash: false, restoreFocus: false });
 
   var images = getProductImages(product);
   var overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
+  overlay.dataset.productId = product.id;
 
   var modal = document.createElement('div');
   modal.className = 'product-modal';
@@ -370,7 +574,8 @@ function openProductModal(product, triggerElement) {
   description.textContent = product.description || 'Description coming soon.';
 
   var compatibility = createCompatibilityList(product);
-  var cta = createProductCta(product, 'modal-buy-btn');
+  var cta = createProductCta(product, 'modal-buy-btn', { context: 'modal' });
+  var checkoutMount = createModalCheckoutMount(product);
 
   details.appendChild(title);
   details.appendChild(jpLabel);
@@ -380,7 +585,12 @@ function openProductModal(product, triggerElement) {
   if (compatibility) {
     details.appendChild(compatibility);
   }
-  details.appendChild(cta);
+  if (cta) {
+    details.appendChild(cta);
+  }
+  if (checkoutMount) {
+    details.appendChild(checkoutMount);
+  }
 
   modal.appendChild(closeButton);
   modal.appendChild(gallery);
@@ -401,26 +611,56 @@ function openProductModal(product, triggerElement) {
   };
 
   activeProductModal = overlay;
-  activeModalTrigger = triggerElement || null;
+  activeModalTrigger = triggerElement || getProductCardById(product.id) || null;
   document.body.classList.add('modal-open');
   document.body.appendChild(overlay);
   document.addEventListener('keydown', activeModalKeyHandler);
+
+  if (settings.updateHash !== false) {
+    syncProductModalHash(product.id);
+  }
+
   closeButton.focus();
+}
+
+function syncProductModalWithHash() {
+  var productId = getProductIdFromHash();
+  var product = getCatalogProductById(productId);
+
+  if (!product) {
+    if (activeProductModal) {
+      closeProductModal({ updateHash: false });
+    }
+    return;
+  }
+
+  if (activeProductModal && activeProductModal.dataset.productId === product.id) {
+    return;
+  }
+
+  openProductModal(product, getProductCardById(product.id), { updateHash: false });
 }
 
 function createProductCard(product) {
   var card = document.createElement('article');
+  var isInteractive = isProductInteractive(product);
   card.className = 'product';
+  if (!isInteractive) {
+    card.classList.add('product-unreleased');
+  }
   card.dataset.productId = product.id;
   card.dataset.name = product.name;
   card.dataset.category = product.category;
   card.dataset.brand = product.brand;
   card.dataset.price = product.price;
-  card.dataset.added = product.added;
-  card.tabIndex = 0;
-  card.setAttribute('role', 'button');
-  card.setAttribute('aria-haspopup', 'dialog');
-  card.setAttribute('aria-label', 'View details for ' + product.name);
+  card.dataset.added = String(product.added || '').trim();
+
+  if (isInteractive) {
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-haspopup', 'dialog');
+    card.setAttribute('aria-label', 'View details for ' + product.name);
+  }
 
   var imageWrap = document.createElement('div');
   imageWrap.className = 'product-img';
@@ -450,7 +690,7 @@ function createProductCard(product) {
     compatibility.textContent = compatibilitySummary;
   }
 
-  var cta = createProductCta(product);
+  var cta = createProductCta(product, '', { context: 'card', triggerElement: card });
 
   card.appendChild(createProductTags(product));
   card.appendChild(imageWrap);
@@ -462,18 +702,20 @@ function createProductCard(product) {
   card.appendChild(jpLabel);
   card.appendChild(cta);
 
-  card.addEventListener('click', function(event) {
-    if (event.target.closest('.buy-btn')) return;
-    openProductModal(product, card);
-  });
+  if (isInteractive) {
+    card.addEventListener('click', function(event) {
+      if (event.target.closest('.buy-btn')) return;
+      openProductModal(product, card);
+    });
 
-  card.addEventListener('keydown', function(event) {
-    if (event.target.closest('.buy-btn')) return;
-    if (event.key !== 'Enter' && event.key !== ' ') return;
+    card.addEventListener('keydown', function(event) {
+      if (event.target.closest('.buy-btn')) return;
+      if (event.key !== 'Enter' && event.key !== ' ') return;
 
-    event.preventDefault();
-    openProductModal(product, card);
-  });
+      event.preventDefault();
+      openProductModal(product, card);
+    });
+  }
 
   return card;
 }
@@ -528,6 +770,10 @@ function applySort() {
     } else {
       aVal = a.dataset.added;
       bVal = b.dataset.added;
+
+      if (!aVal && !bVal) return 0;
+      if (!aVal) return -1;
+      if (!bVal) return 1;
     }
 
     if (aVal < bVal) return -1 * dir;
@@ -574,11 +820,14 @@ function initProductCatalog() {
     }
 
     var products = payload.products;
+    catalogProducts = products.slice();
+    warmCheckoutAssets(products);
     renderFilterGroup('categoryFilters', 'category', getFilterOptions(products, 'category'));
     renderFilterGroup('brandFilters', 'brand', getFilterOptions(products, 'brand'));
     renderProducts(products);
     applySort();
     applyFilters();
+    syncProductModalWithHash();
   } catch (error) {
     console.error(error);
     showProductLoadError();
@@ -595,6 +844,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sortSelect.addEventListener('change', applySort);
   }
 
+  window.addEventListener('hashchange', syncProductModalWithHash);
   initProductCatalog();
 });
 
@@ -605,22 +855,99 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var counterWrapper = counter.parentElement;
   var currentValue = Math.floor(Math.random() * 6000) + 4000;
+  var boostTimer = null;
+  var boostStartedAt = 0;
+  var activePointerId = null;
 
   function renderCounter() {
     counter.textContent = currentValue.toLocaleString('en-AU');
   }
 
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function getBoostAmount(elapsedMs) {
+    if (elapsedMs < 1000) {
+      return getRandomInt(1, 5);
+    }
+
+    if (elapsedMs < 3000) {
+      return getRandomInt(10, 100);
+    }
+
+    return getRandomInt(100, 1000);
+  }
+
+  function stopBoost() {
+    if (boostTimer) {
+      window.clearTimeout(boostTimer);
+    }
+
+    boostTimer = null;
+    boostStartedAt = 0;
+    activePointerId = null;
+  }
+
+  function scheduleBoostTick() {
+    boostTimer = window.setTimeout(function() {
+      currentValue += getBoostAmount(Date.now() - boostStartedAt);
+      renderCounter();
+      scheduleBoostTick();
+    }, 250);
+  }
+
+  function startBoost(pointerId) {
+    if (boostTimer) return;
+
+    boostStartedAt = Date.now();
+    activePointerId = typeof pointerId === 'number' ? pointerId : null;
+    scheduleBoostTick();
+  }
+
   renderCounter();
 
   if (counterWrapper) {
-    counterWrapper.addEventListener('click', function() {
-      if (Math.random() < 0.85) {
-        currentValue += 1;
-      } else {
-        currentValue -= Math.floor(Math.random() * 51) + 50;
+    counterWrapper.addEventListener('pointerenter', function(event) {
+      if (event.pointerType === 'mouse') {
+        startBoost();
       }
-      if (currentValue < 0) currentValue = 0;
-      renderCounter();
+    });
+
+    counterWrapper.addEventListener('pointerleave', function(event) {
+      if (event.pointerType === 'mouse') {
+        stopBoost();
+      }
+    });
+
+    counterWrapper.addEventListener('pointerdown', function(event) {
+      if (event.pointerType === 'mouse') return;
+
+      activePointerId = event.pointerId;
+
+      if (typeof counterWrapper.setPointerCapture === 'function') {
+        try {
+          counterWrapper.setPointerCapture(event.pointerId);
+        } catch (error) {
+          // Ignore capture failures and fall back to local events.
+        }
+      }
+
+      startBoost(event.pointerId);
+    });
+
+    counterWrapper.addEventListener('pointerup', function(event) {
+      if (activePointerId !== null && event.pointerId !== activePointerId) return;
+      stopBoost();
+    });
+
+    counterWrapper.addEventListener('pointercancel', function(event) {
+      if (activePointerId !== null && event.pointerId !== activePointerId) return;
+      stopBoost();
+    });
+
+    counterWrapper.addEventListener('lostpointercapture', function() {
+      stopBoost();
     });
   }
 })();
