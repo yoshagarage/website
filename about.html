@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#54A9DE">
+  <meta name="description" content="About Yōsha Garage, an automotive accessories maker based in Melbourne, Australia, focused on practical design and custom projects.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://www.paypalobjects.com data:; font-src 'self'; connect-src 'self' https://www.paypal.com https://www.paypalobjects.com; form-action 'self' https://www.paypal.com; object-src 'none'; base-uri 'self'">
   <title>About ★ Yōsha Garage</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -14,6 +16,17 @@
   <link rel="stylesheet" href="css/base.css">
 </head>
 <body>
+  <svg class="site-icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="icon-store" viewBox="0 0 24 24">
+      <path d="M6 8h12l-1 12H7L6 8Z"></path>
+      <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+    </symbol>
+    <symbol id="icon-about" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 10v6"></path>
+      <path d="M12 7h.01"></path>
+    </symbol>
+  </svg>
   <header class="site-header">
     <div class="site-header-inner">
       <div class="site-header-nav site-header-nav-desktop">
@@ -21,8 +34,7 @@
           <a class="site-nav-link" href="index.html">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 8h12l-1 12H7L6 8Z"></path>
-                <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                <use href="#icon-store"></use>
               </svg>
             </span>
             <span class="site-nav-label">STORE</span>
@@ -30,9 +42,7 @@
           <a class="site-nav-link is-current" href="about.html" aria-current="page">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 10v6"></path>
-                <path d="M12 7h.01"></path>
+                <use href="#icon-about"></use>
               </svg>
             </span>
             <span class="site-nav-label">ABOUT</span>
@@ -52,8 +62,7 @@
           <a class="site-nav-link" href="index.html">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 8h12l-1 12H7L6 8Z"></path>
-                <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                <use href="#icon-store"></use>
               </svg>
             </span>
             <span class="site-nav-label">STORE</span>
@@ -61,17 +70,15 @@
           <a class="site-nav-link is-current" href="about.html" aria-current="page">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 10v6"></path>
-                <path d="M12 7h.01"></path>
+                <use href="#icon-about"></use>
               </svg>
             </span>
             <span class="site-nav-label">ABOUT</span>
           </a>
         </nav>
       </details>
-      <a class="site-brand" href="index.html" aria-label="Yosha Garage home">
-        <img src="assets/images/logo.png" alt="Yōsha Garage 西洋車ガレージ" class="logo">
+      <a class="site-brand" href="index.html">
+        <img src="assets/images/logo-optimized.png" alt="Yōsha Garage 西洋車ガレージ" class="logo" width="480" height="289" decoding="async" fetchpriority="high">
         <div class="subtitle">★ AUTOMOTIVE ACCESSORIES ★</div>
       </a>
     </div>
@@ -100,7 +107,6 @@
     <div class="visitor-counter">VISITORS: <span id="vc">0</span></div>
   </footer>
 
-  <script src="js/products-data.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/shared.js" defer></script>
 </body>
 </html>

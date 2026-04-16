@@ -36,6 +36,37 @@ function isPayPalPaymentLinkCheckout(checkout) {
   );
 }
 
+function getSafeBuyUrl(product) {
+  var rawValue = String(product && product.buyUrl || '').trim();
+  var parsedUrl;
+
+  if (!rawValue || !/^https:\/\//i.test(rawValue)) {
+    return '';
+  }
+
+  try {
+    parsedUrl = new URL(rawValue);
+  } catch (error) {
+    return '';
+  }
+
+  return parsedUrl.protocol === 'https:' ? parsedUrl.href : '';
+}
+
+function getSafeImageSrc(value) {
+  var imageSrc = String(value || '').trim();
+
+  if (!imageSrc || /^\/\//.test(imageSrc)) {
+    return '';
+  }
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(imageSrc)) {
+    return /^https:\/\//i.test(imageSrc) ? imageSrc : '';
+  }
+
+  return imageSrc;
+}
+
 function getProductCtaMode(product) {
   var ctaConfig = product && product.cta && typeof product.cta === 'object'
     ? product.cta
@@ -49,7 +80,7 @@ function getProductCtaMode(product) {
     return 'modal';
   }
 
-  if (String(product.buyUrl || product.butUrl || '').trim()) {
+  if (getSafeBuyUrl(product)) {
     return 'link';
   }
 
@@ -81,6 +112,8 @@ var PAYPAL_OBJECTS_ORIGIN = 'https://www.paypalobjects.com';
 var PAYPAL_ORIGIN = 'https://www.paypal.com';
 var PAYPAL_PAYMENT_CARDS_SRC = PAYPAL_OBJECTS_ORIGIN + '/images/Debit_Credit_APM.svg';
 var PAYPAL_WORDMARK_SRC = PAYPAL_OBJECTS_ORIGIN + '/paypal-ui/logos/svg/paypal-wordmark-color.svg';
+var DEFAULT_PRODUCT_IMAGE_WIDTH = 960;
+var DEFAULT_PRODUCT_IMAGE_HEIGHT = 720;
 var preloadedCheckoutAssets = {};
 
 function ensurePreconnectLink(origin) {
@@ -172,26 +205,49 @@ function getCatalogProductById(productId) {
 }
 
 function getProductCardById(productId) {
-  if (!productId) {
+  var cards;
+  var index;
+
+  if (!productId || !productGrid) {
     return null;
   }
 
-  return document.querySelector('.product[data-product-id="' + productId + '"]');
+  cards = productGrid.querySelectorAll('.product');
+  for (index = 0; index < cards.length; index += 1) {
+    if (cards[index].dataset.productId === productId) {
+      return cards[index];
+    }
+  }
+
+  return null;
 }
 
 function getProductImages(product) {
   var imageManifest = window.YOSHA_PRODUCT_IMAGES || {};
-  var images = Array.isArray(imageManifest[product.id]) ? imageManifest[product.id].slice() : [];
-  var primaryIndex = images.indexOf(product.imageSrc);
+  var primaryImageSrc = getSafeImageSrc(product.imageSrc);
+  var images = Array.isArray(imageManifest[product.id])
+    ? imageManifest[product.id].map(getSafeImageSrc).filter(Boolean)
+    : [];
+  var primaryIndex = images.indexOf(primaryImageSrc);
 
   if (primaryIndex > 0) {
     images.splice(primaryIndex, 1);
-    images.unshift(product.imageSrc);
-  } else if (primaryIndex === -1 && product.imageSrc) {
-    images.unshift(product.imageSrc);
+    images.unshift(primaryImageSrc);
+  } else if (primaryIndex === -1 && primaryImageSrc) {
+    images.unshift(primaryImageSrc);
   }
 
   return images.filter(Boolean);
+}
+
+function applyImageMetadata(image) {
+  if (!image) {
+    return;
+  }
+
+  image.width = DEFAULT_PRODUCT_IMAGE_WIDTH;
+  image.height = DEFAULT_PRODUCT_IMAGE_HEIGHT;
+  image.decoding = 'async';
 }
 
 function createFilterButton(filterType, value, label) {
@@ -250,7 +306,7 @@ function createProductTags(product, extraClassName) {
 }
 
 function createProductCta(product, extraClassName, options) {
-  var buyUrl = String(product.buyUrl || product.butUrl || '').trim();
+  var buyUrl = getSafeBuyUrl(product);
   var settings = options || {};
   var ctaMode = getProductCtaMode(product);
   var ctaLabel = getProductCtaLabel(product, ctaMode);
@@ -426,6 +482,8 @@ function createThumbnailButton(mainImage, thumbnails, imageSrc, imageAlt, isActi
   var image = document.createElement('img');
   image.src = imageSrc;
   image.alt = imageAlt;
+  image.loading = 'lazy';
+  image.decoding = 'async';
   button.appendChild(image);
 
   button.addEventListener('click', function() {
@@ -464,7 +522,6 @@ function createModalCheckoutMount(product) {
   form.action = buildPayPalPaymentUrl(checkout);
   form.method = 'post';
   form.target = '_blank';
-  form.rel = 'noopener noreferrer';
 
   submitButton = document.createElement('input');
   submitButton.className = 'paypal-payment-button';
@@ -475,6 +532,8 @@ function createModalCheckoutMount(product) {
   cardsImage.className = 'paypal-payment-cards';
   cardsImage.src = PAYPAL_PAYMENT_CARDS_SRC;
   cardsImage.alt = 'PayPal accepted payment methods';
+  cardsImage.loading = 'lazy';
+  cardsImage.decoding = 'async';
 
   branding = document.createElement('section');
   branding.className = 'paypal-payment-branding';
@@ -486,6 +545,8 @@ function createModalCheckoutMount(product) {
   brandingLogo.className = 'paypal-payment-logo';
   brandingLogo.src = PAYPAL_WORDMARK_SRC;
   brandingLogo.alt = 'PayPal';
+  brandingLogo.loading = 'lazy';
+  brandingLogo.decoding = 'async';
 
   branding.appendChild(brandingText);
   branding.appendChild(brandingLogo);
@@ -504,6 +565,7 @@ function openProductModal(product, triggerElement, options) {
   closeProductModal({ updateHash: false, restoreFocus: false });
 
   var images = getProductImages(product);
+  var primaryImageSrc = images[0] || getSafeImageSrc(product.imageSrc);
   var overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.dataset.productId = product.id;
@@ -528,8 +590,11 @@ function openProductModal(product, triggerElement, options) {
 
   var mainImage = document.createElement('img');
   mainImage.className = 'modal-main-image';
-  mainImage.src = images[0] || product.imageSrc;
   mainImage.alt = product.imageAlt || product.name;
+  applyImageMetadata(mainImage);
+  if (primaryImageSrc) {
+    mainImage.src = primaryImageSrc;
+  }
   mainImageWrap.appendChild(mainImage);
   gallery.appendChild(mainImageWrap);
 
@@ -644,6 +709,7 @@ function syncProductModalWithHash() {
 function createProductCard(product) {
   var card = document.createElement('article');
   var isInteractive = isProductInteractive(product);
+  var imageSrc = getSafeImageSrc(product.imageSrc);
   card.className = 'product';
   if (!isInteractive) {
     card.classList.add('product-unreleased');
@@ -654,20 +720,24 @@ function createProductCard(product) {
   card.dataset.brand = product.brand;
   card.dataset.price = product.price;
   card.dataset.added = String(product.added || '').trim();
+  card.dataset.isReleased = isInteractive ? '1' : '0';
 
   if (isInteractive) {
     card.tabIndex = 0;
     card.setAttribute('role', 'button');
     card.setAttribute('aria-haspopup', 'dialog');
-    card.setAttribute('aria-label', 'View details for ' + product.name);
   }
 
   var imageWrap = document.createElement('div');
   imageWrap.className = 'product-img';
 
   var image = document.createElement('img');
-  image.src = product.imageSrc;
   image.alt = product.imageAlt || product.name;
+  image.loading = catalogProducts.length > 4 ? 'lazy' : 'eager';
+  applyImageMetadata(image);
+  if (imageSrc) {
+    image.src = imageSrc;
+  }
   imageWrap.appendChild(image);
 
   var title = document.createElement('h3');
@@ -759,6 +829,12 @@ function applySort() {
   products.sort(function(a, b) {
     var aVal;
     var bVal;
+    var aReleased = a.dataset.isReleased === '1';
+    var bReleased = b.dataset.isReleased === '1';
+
+    if (aReleased !== bReleased) {
+      return aReleased ? -1 : 1;
+    }
 
     if (field === 'price') {
       aVal = parseFloat(a.dataset.price);
@@ -809,6 +885,12 @@ function showProductLoadError() {
 }
 
 function initProductCatalog() {
+  var products;
+
+  if (!productGrid || !noResults) {
+    return;
+  }
+
   try {
     var payload = window.YOSHA_PRODUCTS_DATA;
     if (!payload || typeof payload !== 'object') {
@@ -819,7 +901,7 @@ function initProductCatalog() {
       throw new Error('Invalid products data format: expected a products array');
     }
 
-    var products = payload.products;
+    products = payload.products;
     catalogProducts = products.slice();
     warmCheckoutAssets(products);
     renderFilterGroup('categoryFilters', 'category', getFilterOptions(products, 'category'));
@@ -836,6 +918,11 @@ function initProductCatalog() {
 
 document.addEventListener('DOMContentLoaded', function() {
   var toolbar = document.querySelector('.toolbar');
+
+  if (!productGrid) {
+    return;
+  }
+
   if (toolbar) {
     toolbar.addEventListener('click', handleFilterClick);
   }
@@ -847,107 +934,3 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('hashchange', syncProductModalWithHash);
   initProductCatalog();
 });
-
-/* ===== VISITOR COUNTER ===== */
-(function() {
-  var counter = document.getElementById('vc');
-  if (!counter) return;
-
-  var counterWrapper = counter.parentElement;
-  var currentValue = Math.floor(Math.random() * 6000) + 4000;
-  var boostTimer = null;
-  var boostStartedAt = 0;
-  var activePointerId = null;
-
-  function renderCounter() {
-    counter.textContent = currentValue.toLocaleString('en-AU');
-  }
-
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  function getBoostAmount(elapsedMs) {
-    if (elapsedMs < 1000) {
-      return getRandomInt(1, 5);
-    }
-
-    if (elapsedMs < 3000) {
-      return getRandomInt(10, 100);
-    }
-
-    return getRandomInt(100, 1000);
-  }
-
-  function stopBoost() {
-    if (boostTimer) {
-      window.clearTimeout(boostTimer);
-    }
-
-    boostTimer = null;
-    boostStartedAt = 0;
-    activePointerId = null;
-  }
-
-  function scheduleBoostTick() {
-    boostTimer = window.setTimeout(function() {
-      currentValue += getBoostAmount(Date.now() - boostStartedAt);
-      renderCounter();
-      scheduleBoostTick();
-    }, 250);
-  }
-
-  function startBoost(pointerId) {
-    if (boostTimer) return;
-
-    boostStartedAt = Date.now();
-    activePointerId = typeof pointerId === 'number' ? pointerId : null;
-    scheduleBoostTick();
-  }
-
-  renderCounter();
-
-  if (counterWrapper) {
-    counterWrapper.addEventListener('pointerenter', function(event) {
-      if (event.pointerType === 'mouse') {
-        startBoost();
-      }
-    });
-
-    counterWrapper.addEventListener('pointerleave', function(event) {
-      if (event.pointerType === 'mouse') {
-        stopBoost();
-      }
-    });
-
-    counterWrapper.addEventListener('pointerdown', function(event) {
-      if (event.pointerType === 'mouse') return;
-
-      activePointerId = event.pointerId;
-
-      if (typeof counterWrapper.setPointerCapture === 'function') {
-        try {
-          counterWrapper.setPointerCapture(event.pointerId);
-        } catch (error) {
-          // Ignore capture failures and fall back to local events.
-        }
-      }
-
-      startBoost(event.pointerId);
-    });
-
-    counterWrapper.addEventListener('pointerup', function(event) {
-      if (activePointerId !== null && event.pointerId !== activePointerId) return;
-      stopBoost();
-    });
-
-    counterWrapper.addEventListener('pointercancel', function(event) {
-      if (activePointerId !== null && event.pointerId !== activePointerId) return;
-      stopBoost();
-    });
-
-    counterWrapper.addEventListener('lostpointercapture', function() {
-      stopBoost();
-    });
-  }
-})();

@@ -4,7 +4,7 @@ window.YOSHA_PRODUCTS_DATA = {
       id: 'rav4-cubby-gauge-holder-XS10',
       name: 'RAV4 Gauge Holder',
       jpLabel: 'ゲージホルダー',
-      description: 'Cubby replacement single-gauge holder to the AEM 30-0300 X-Series. 3D printed in ASA. Contact us for custom sizes to suit other gauges. ',
+      description: 'Cubby replacement single-gauge holder to suit the AEM 30-0300 X-Series. 3D printed in ASA. Contact us for custom sizes to suit other gauges.',
       compatibility: [
         {
           make: 'Toyota',

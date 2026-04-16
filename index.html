@@ -5,17 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google" content="notranslate">
   <meta name="theme-color" content="#54A9DE">
+  <meta name="description" content="Yōsha Garage designs and sells practical automotive accessories, including interior mounts and gauge holders for selected Toyota and Subaru vehicles.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://www.paypalobjects.com data:; font-src 'self'; connect-src 'self' https://www.paypal.com https://www.paypalobjects.com; form-action 'self' https://www.paypal.com; object-src 'none'; base-uri 'self'">
   <title>Yōsha Garage ★ 西洋車ガレージ</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="preconnect" href="https://www.paypal.com" crossorigin>
-  <link rel="preconnect" href="https://www.paypalobjects.com" crossorigin>
   <link rel="stylesheet" href="css/base.css">
 </head>
 <body>
+  <svg class="site-icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="icon-store" viewBox="0 0 24 24">
+      <path d="M6 8h12l-1 12H7L6 8Z"></path>
+      <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+    </symbol>
+    <symbol id="icon-about" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 10v6"></path>
+      <path d="M12 7h.01"></path>
+    </symbol>
+  </svg>
 
   <header class="site-header">
     <div class="site-header-inner">
@@ -24,8 +35,7 @@
           <a class="site-nav-link is-current" href="index.html" aria-current="page">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 8h12l-1 12H7L6 8Z"></path>
-                <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                <use href="#icon-store"></use>
               </svg>
             </span>
             <span class="site-nav-label">STORE</span>
@@ -33,9 +43,7 @@
           <a class="site-nav-link" href="about.html">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 10v6"></path>
-                <path d="M12 7h.01"></path>
+                <use href="#icon-about"></use>
               </svg>
             </span>
             <span class="site-nav-label">ABOUT</span>
@@ -55,8 +63,7 @@
           <a class="site-nav-link is-current" href="index.html" aria-current="page">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 8h12l-1 12H7L6 8Z"></path>
-                <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                <use href="#icon-store"></use>
               </svg>
             </span>
             <span class="site-nav-label">STORE</span>
@@ -64,17 +71,15 @@
           <a class="site-nav-link" href="about.html">
             <span class="site-nav-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M12 10v6"></path>
-                <path d="M12 7h.01"></path>
+                <use href="#icon-about"></use>
               </svg>
             </span>
             <span class="site-nav-label">ABOUT</span>
           </a>
         </nav>
       </details>
-      <a class="site-brand" href="index.html" aria-label="Yosha Garage home">
-        <img src="assets/images/logo.png" alt="Yōsha Garage 西洋車ガレージ" class="logo">
+      <a class="site-brand" href="index.html">
+        <img src="assets/images/logo-optimized.png" alt="Yōsha Garage 西洋車ガレージ" class="logo" width="480" height="289" decoding="async" fetchpriority="high">
         <div class="subtitle">★ AUTOMOTIVE ACCESSORIES ★</div>
       </a>
     </div>
@@ -88,31 +93,33 @@
 
   <hr>
 
-  <div class="toolbar">
-    <div class="filter-group">
-      <span class="filter-label">Category:</span>
-      <div class="filter-options" id="categoryFilters"></div>
+  <main class="page-content page-content-store">
+    <div class="toolbar">
+      <div class="filter-group">
+        <span class="filter-label">Category:</span>
+        <div class="filter-options" id="categoryFilters"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Vehicle:</span>
+        <div class="filter-options" id="brandFilters"></div>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="sortSelect">Sort:</label>
+        <select class="sort-select" id="sortSelect">
+          <option value="added-desc">Date, new to old</option>
+          <option value="added-asc">Date, old to new</option>
+          <option value="price-asc">Price, low to high</option>
+          <option value="price-desc">Price, high to low</option>
+          <option value="name-asc">Name, A to Z</option>
+          <option value="name-desc">Name, Z to A</option>
+        </select>
+      </div>
     </div>
-    <div class="filter-group">
-      <span class="filter-label">Vehicle:</span>
-      <div class="filter-options" id="brandFilters"></div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Sort:</span>
-      <select class="sort-select" id="sortSelect">
-        <option value="added-desc">Date, new to old</option>
-        <option value="added-asc">Date, old to new</option>
-        <option value="price-asc">Price, low to high</option>
-        <option value="price-desc">Price, high to low</option>
-        <option value="name-asc">Name, A to Z</option>
-        <option value="name-desc">Name, Z to A</option>
-      </select>
-    </div>
-  </div>
 
-  <section class="products" id="productGrid">
-    <div class="no-results" id="noResults" style="display:none;">該当する商品がありません ★ No products match your filters</div>
-  </section>
+    <section class="products" id="productGrid">
+      <div class="no-results" id="noResults" style="display:none;">該当する商品がありません ★ No products match your filters</div>
+    </section>
+  </main>
 
   <hr>
 
@@ -121,8 +128,9 @@
     <div class="visitor-counter">VISITORS: <span id="vc">0</span></div>
   </footer>
 
-  <script src="js/products-data.js"></script>
-  <script src="js/product-images.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/shared.js" defer></script>
+  <script src="js/products-data.js" defer></script>
+  <script src="js/product-images.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

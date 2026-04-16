@@ -36,10 +36,17 @@ body {
   align-items: center;
   color: inherit;
 }
+.site-icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
 .site-header .logo {
   display: inline-block;
   max-height: 140px;
   width: auto;
+  height: auto;
   margin: 0;
   filter: drop-shadow(3px 3px 0 rgba(33,87,101,0.5));
 }
@@ -186,6 +193,12 @@ body {
   0%   { transform: translateX(100vw); }
   100% { transform: translateX(-100%); }
 }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-inner {
+    animation: none;
+    transform: none;
+  }
+}
 
 /* ===== VISITOR COUNTER ===== */
 .visitor-counter {
@@ -275,6 +288,12 @@ body {
   width: min(100%, 840px);
   margin: 0 auto;
   padding: 24px 16px 32px;
+}
+.page-content-store {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 0 32px;
 }
 .about-panel {
   padding: 22px 20px;
