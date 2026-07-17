@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "build": "node scripts/generate-product-images.mjs",
-    "dev": "npm run build && lite-server"
+    "dev": "npm run build && lite-server",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",

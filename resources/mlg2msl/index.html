@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="notranslate" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#54A9DE">
+  <meta name="description" content="Convert EFI Analytics and TunerStudio MLG datalogs to MegaLogViewer-compatible MSL files entirely in your browser.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'">
+  <title>MLG to MSL Converter ★ Yōsha Garage</title>
+  <link rel="icon" href="../../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
+  <link rel="stylesheet" href="../../css/base.css">
+  <link rel="stylesheet" href="../../css/mlg2msl.css">
+</head>
+<body>
+  <svg class="site-icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="icon-store" viewBox="0 0 24 24">
+      <path d="M6 8h12l-1 12H7L6 8Z"></path>
+      <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+    </symbol>
+    <symbol id="icon-about" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 10v6"></path>
+      <path d="M12 7h.01"></path>
+    </symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-header-nav site-header-nav-desktop">
+        <nav class="site-nav site-nav-header" aria-label="Primary navigation">
+          <a class="site-nav-link" href="../../index.html">
+            <span class="site-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-store"></use></svg></span>
+            <span class="site-nav-label">STORE</span>
+          </a>
+          <a class="site-nav-link" href="../../about.html">
+            <span class="site-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-about"></use></svg></span>
+            <span class="site-nav-label">ABOUT</span>
+          </a>
+          <a class="site-nav-link is-current" href="../index.html" aria-current="page">
+            <span class="site-nav-icon site-nav-icon-text" aria-hidden="true">★</span>
+            <span class="site-nav-label">RESOURCES</span>
+          </a>
+        </nav>
+      </div>
+      <details class="header-menu">
+        <summary class="header-menu-toggle"><span class="header-menu-toggle-icon" aria-hidden="true"><span></span><span></span><span></span></span><span class="header-menu-toggle-label">MENU</span></summary>
+        <nav class="site-nav site-nav-header site-nav-mobile" aria-label="Primary navigation">
+          <a class="site-nav-link" href="../../index.html"><span class="site-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-store"></use></svg></span><span class="site-nav-label">STORE</span></a>
+          <a class="site-nav-link" href="../../about.html"><span class="site-nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-about"></use></svg></span><span class="site-nav-label">ABOUT</span></a>
+          <a class="site-nav-link is-current" href="../index.html" aria-current="page"><span class="site-nav-icon site-nav-icon-text" aria-hidden="true">★</span><span class="site-nav-label">RESOURCES</span></a>
+        </nav>
+      </details>
+      <a class="site-brand" href="../../index.html">
+        <img src="../../assets/images/logo-optimized.png" alt="Yōsha Garage 西洋車ガレージ" class="logo" width="480" height="289" decoding="async" fetchpriority="high">
+        <div class="subtitle">★ AUTOMOTIVE ACCESSORIES ★</div>
+      </a>
+    </div>
+  </header>
+
+  <div class="marquee-wrap"><div class="marquee-inner">★★★ TunerStudio log conversion ★ ローカル変換 ★★★</div></div>
+  <hr>
+
+  <main class="page-content converter-page">
+    <section class="converter-intro" aria-labelledby="converterTitle">
+      <span class="page-kicker">FREE BROWSER TOOL ★ 無料ツール</span>
+      <h1 class="converter-title" id="converterTitle">MLG → MSL Converter</h1>
+      <p class="converter-lede">Turn an EFI Analytics or TunerStudio binary <strong>.mlg</strong> datalog into a tab-delimited <strong>.msl</strong> file for MegaLogViewer.</p>
+      <p class="converter-lede">Useful on Mac where the latest version of MegaLogViewer can't open <strong>.mlg</strong> files</p>
+    </section>
+
+    <section class="converter-card" aria-label="MLG file converter">
+      <div class="converter-drop-zone" id="dropZone" aria-busy="false">
+        <div class="converter-drop-content">
+          <div class="converter-file-mark" aria-hidden="true">.MLG</div>
+          <h2 class="converter-drop-title">Drop your TunerStudio log here</h2>
+          <p class="converter-drop-copy">Or choose a file from your device. The original log is never changed.</p>
+          <button class="converter-button" id="chooseMlgFile" type="button">CHOOSE MLG FILE</button>
+          <input id="mlgFile" type="file" accept=".mlg,application/octet-stream" hidden>
+        </div>
+      </div>
+
+      <section class="conversion-status" id="conversionStatus" aria-live="polite" hidden>
+        <h2 class="conversion-status-title" id="statusTitle"></h2>
+        <p class="conversion-status-message" id="statusMessage"></p>
+        <div class="conversion-stats" id="statusStats"></div>
+        <div class="conversion-actions">
+          <a class="converter-button" id="downloadLink" href="#" hidden>DOWNLOAD MSL</a>
+          <button class="converter-button converter-button-secondary" id="resetConverter" type="button" hidden>CONVERT ANOTHER</button>
+        </div>
+      </section>
+    </section>
+
+  </main>
+
+  <hr>
+  <footer class="site-footer"><div>© 2026 Yōsha Garage ★ Melbourne, Australia ★ All Rights Reserved</div><div class="visitor-counter">VISITORS: <span id="vc">0</span></div></footer>
+
+  <script src="../../js/shared.js" defer></script>
+  <script src="../../js/mlg-tool.mjs" type="module"></script>
+</body>
+</html>

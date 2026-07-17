@@ -1,0 +1,99 @@
+.resources-page {
+  width: min(100%, 980px);
+  padding-top: 32px;
+  padding-bottom: 52px;
+}
+
+.resources-intro {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.resources-title {
+  margin-bottom: 10px;
+  color: #215765;
+  font-size: clamp(28px, 5vw, 46px);
+  text-transform: uppercase;
+}
+
+.resources-lede {
+  max-width: 650px;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.resource-library {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.resource-card {
+  display: flex;
+  min-height: 230px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  border: 3px solid #215765;
+  background: #fff;
+  color: #215765;
+  box-shadow: 5px 5px 0 #215765;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.resource-card:hover,
+.resource-card:focus-visible {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 #215765;
+  outline: none;
+}
+
+.resource-card-type {
+  margin-bottom: 18px;
+  padding: 3px 8px;
+  border: 2px solid #215765;
+  background: #FFCC11;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.resource-card-mark {
+  margin-bottom: 12px;
+  color: #54A9DE;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.resource-card h2 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.resource-card p {
+  margin-bottom: 20px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.resource-card-link {
+  margin-top: auto;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.resources-footnote {
+  margin-top: 24px;
+  padding: 14px 16px;
+  border: 2px solid #3496AC;
+  background: #d4e8f2;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+@media (max-width: 650px) {
+  .resources-page { padding-top: 24px; }
+}

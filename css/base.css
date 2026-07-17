@@ -253,6 +253,13 @@ body {
   height: 100%;
   display: block;
 }
+.site-nav-icon-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+}
 .site-nav-label {
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -294,6 +301,17 @@ body {
   max-width: none;
   margin: 0;
   padding: 0 0 32px;
+}
+.page-kicker {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 3px 9px;
+  border: 2px solid #215765;
+  background: #FFCC11;
+  color: #215765;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
 }
 .about-panel {
   padding: 22px 20px;
